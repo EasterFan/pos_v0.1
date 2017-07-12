@@ -1,13 +1,13 @@
 'use strict';
 
 // 1.新建收据对象数组
-function buildItemSheet(inputs)
+function turnStringtoArray(inputs)
 {
-  var partialItemSheet = new Array;
+  var ItemSheetArray = new Array;
   var totalPrice = 0;
   for (let item of inputs)
   {
-    partialItemSheet.push
+    ItemSheetArray.push
     (
       {
         barcode: item.barcode,
@@ -22,22 +22,22 @@ function buildItemSheet(inputs)
     totalPrice = totalPrice + parseInt(item.count).toFixed(2) * parseInt(item.price).toFixed(2);
   }
 
-  return partialItemSheet;
+  return ItemSheetArray;
 }
 
 
 // 2.合并重复对象
-function buildBarcode(partialItemSheet)
+function buildBarcode(ItemSheetArray)
 {
   var barcode = new Array;
-  for (let i=0;i<partialItemSheet.length;i++)
+  for (let i=0;i<ItemSheetArray.length;i++)
   {
-    for (let j=i+1;j<partialItemSheet.length;j++)
+    for (let j=i+1;j<ItemSheetArray.length;j++)
     {
-      if (partialItemSheet[i].barcode == partialItemSheet[j].barcode )
+      if (ItemSheetArray[i].barcode == ItemSheetArray[j].barcode )
        j = ++i;
     }
-    barcode.push(partialItemSheet[i]);
+    barcode.push(ItemSheetArray[i]);
   }
   return barcode;
 
@@ -45,13 +45,13 @@ function buildBarcode(partialItemSheet)
 
 
 // 3.数出每个barcode重复次数
-function calculateBarcode(barcode, partialItemSheet)
+function calculateBarcode(barcode, ItemSheetArray)
 {
   var count = 0;
-  var itemSheet = new Array;
+  var calculatedBarcode = new Array;
   for(let i=0;i<barcode.length;i++)
   {
-    for (let item of partialItemSheet)
+    for (let item of ItemSheetArray)
     {
       if (barcode[i].barcode == item.barcode)
       {
@@ -59,58 +59,60 @@ function calculateBarcode(barcode, partialItemSheet)
       }
     }
 
-    itemSheet[i] = { 'name': barcode[i].name, 'count': count, 'price': barcode[i].price, unit: barcode[i].unit, };
+    calculatedBarcode[i] = { 'name': barcode[i].name, 'count': count, 'price': barcode[i].price, unit: barcode[i].unit, };
     count = 0;
   }
 
-  return  itemSheet;
+  return  calculatedBarcode;
 }
 
 
 
 // 4.计算一类商品小计和总价
-function buildSingleItem(itemSheet)
+function calculateSmallPriceTotalPrice(calculatedBarcode)
 {
-  var singleItem = [];
+  var SmallPriceTotalPrice = [];
   var singleItemList = 0;
 
   var totalPrice = 0;
-  for (let item of itemSheet) {
-    singleItem[singleItemList ++] = {
+  for (let item of calculatedBarcode) {
+    SmallPriceTotalPrice[singleItemList ++] = {
       name: item.name,
       count: item.count ,
       unit: item.unit,
       price: item.price.toFixed(2),
-      prices: parseInt(item.count) * parseInt(item.price),
+      smallPrice: parseInt(item.count) * parseInt(item.price),
     };
     totalPrice = totalPrice + parseInt(item.count).toFixed(2) * parseInt(item.price).toFixed(2);
-// console.log(totalPrice);
-  singleItem.totalPrice= totalPrice.toFixed(2);
+
+    SmallPriceTotalPrice.totalPrice= totalPrice.toFixed(2);
   }
-  return singleItem;
+
+  return SmallPriceTotalPrice;
 }
 
-function buildSingleItemSheet(itemSheet)
+// 5.汇总的收据数组转为对象
+function turnArraytoObject(SmallPriceTotalPrice)
 {
   var singleItem = '';
-  for (let item of itemSheet) {
-    singleItem +=  '名称：' +item.name + '，数量：' + item.count + '，单价：' +item.price + '(元)，小计：' + item.prices.toFixed(2) + '(元)' + "\n"
+  for (let item of SmallPriceTotalPrice) {
+    singleItem +=  '名称：' +item.name + '，数量：' + item.count + item.unit + '，单价：' +item.price + '(元)，小计：' + item.smallPrice.toFixed(2) + '(元)' + "\n"
   }
-  let singleItemSheet = {
+  let ItemSheetObj = {
     singleItem: singleItem,
-    totalPrice: itemSheet.totalPrice,
+    totalPrice: SmallPriceTotalPrice.totalPrice,
   }
 
-  return singleItemSheet;
+  return ItemSheetObj;
 }
 
-// 5.打印收据
-function printReceipt(singleItemSheet)
+// 6.打印收据
+function printReceipt(ItemSheetObj)
 {
   return `***<没钱赚商店>收据***
-${singleItemSheet.singleItem}
+${ItemSheetObj.singleItem}
 ----------------------
-总计：${singleItemSheet.totalPrice}(元)
+总计：${ItemSheetObj.totalPrice}(元)
 **********************`
 
 }
@@ -167,20 +169,21 @@ ${singleItemSheet.singleItem}
     price: 2.00
   }
 ];
+
 */
-
-var partialItemSheet = buildItemSheet(inputs);
-// console.log(partialItemSheet);
-var barcode = buildBarcode(partialItemSheet);
+var ItemSheetArray = turnStringtoArray(inputs);
+ // console.log(partialItemSheet);
+var barcode = buildBarcode(ItemSheetArray);
 // console.log(barcode);
-var itemSheet = calculateBarcode(barcode, partialItemSheet);
- // console.log(itemSheet);
-var itemSheets = buildSingleItem(itemSheet);
-var singleItemSheet = buildSingleItemSheet(itemSheets);
-// console.log(singleItemSheet);
-var result = printReceipt(singleItemSheet);
+var calculatedBarcode = calculateBarcode(barcode, ItemSheetArray);
+//  console.log(calculatedBarcode);
+var SmallPriceTotalPrice = calculateSmallPriceTotalPrice(calculatedBarcode);
+// console.log(SmallPriceTotalPrice);
+var ItemSheetObj = turnArraytoObject(SmallPriceTotalPrice);
+ // console.log(ItemSheet);
+var result = printReceipt(ItemSheetObj);
 
-console.log(result);
+ console.log(result);
 
 
 
