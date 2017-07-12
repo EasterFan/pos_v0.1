@@ -94,7 +94,7 @@ function buildSingleItemSheet(itemSheet)
 {
   var singleItem = '';
   for (let item of itemSheet) {
-    singleItem += '名称：' +item.name + '，数量：' + item.count + '，单价：' +item.price + '(元)，小计：' + item.prices.toFixed(2) + '(元)'
+    singleItem +=  '名称：' +item.name + '，数量：' + item.count + '，单价：' +item.price + '(元)，小计：' + item.prices.toFixed(2) + '(元)' + "\n"
   }
   let singleItemSheet = {
     singleItem: singleItem,
@@ -174,10 +174,11 @@ var partialItemSheet = buildItemSheet(inputs);
 var barcode = buildBarcode(partialItemSheet);
 // console.log(barcode);
 var itemSheet = calculateBarcode(barcode, partialItemSheet);
-// console.log(itemSheet);
-var singleItemSheet = buildSingleItem(itemSheet);
-
-var result = buildSingleItemSheet(singleItemSheet)
+ // console.log(itemSheet);
+var itemSheets = buildSingleItem(itemSheet);
+var singleItemSheet = buildSingleItemSheet(itemSheets);
+// console.log(singleItemSheet);
+var result = printReceipt(singleItemSheet);
 
 console.log(result);
 
