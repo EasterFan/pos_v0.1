@@ -71,8 +71,9 @@ function calculateBarcode(barcode, partialItemSheet)
 // 4.计算一类商品小计和总价
 function buildSingleItem(itemSheet)
 {
-  var singleItem = '';
+  var singleItem = [];
   var singleItemList = 0;
+
   var totalPrice = 0;
   for (let item of itemSheet) {
     singleItem[singleItemList ++] = {
@@ -83,8 +84,8 @@ function buildSingleItem(itemSheet)
       prices: parseInt(item.count) * parseInt(item.price),
     };
     totalPrice = totalPrice + parseInt(item.count).toFixed(2) * parseInt(item.price).toFixed(2);
-
-  singleItem.totalPrice = totalPrice.toFixed(2);
+// console.log(totalPrice);
+  singleItem.totalPrice= totalPrice.toFixed(2);
   }
   return singleItem;
 }
@@ -93,10 +94,10 @@ function buildSingleItemSheet(itemSheet)
 {
   var singleItem = '';
   for (let item of itemSheet) {
-    singleItem += '\n名称：' +item.name + '，数量：' + item.count + '，单价：' +item.price + '(元)，小计：' + item.prices.toFixed(2) + '(元)'
+    singleItem += '名称：' +item.name + '，数量：' + item.count + '，单价：' +item.price + '(元)，小计：' + item.prices.toFixed(2) + '(元)'
   }
   let singleItemSheet = {
-    singleItem: sigleItem,
+    singleItem: singleItem,
     totalPrice: itemSheet.totalPrice,
   }
 
@@ -114,8 +115,8 @@ ${singleItemSheet.singleItem}
 
 }
 
-
-var inputs = [
+/*
+ var inputs = [
   {
     barcode: 'ITEM000000',
     name: '可口可乐',
@@ -166,7 +167,7 @@ var inputs = [
     price: 2.00
   }
 ];
-
+*/
 
 var partialItemSheet = buildItemSheet(inputs);
 // console.log(partialItemSheet);
