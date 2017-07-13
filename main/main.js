@@ -15,7 +15,7 @@ function turnStringtoArray(inputs)
         unit: item.unit,
         price: item.price,
         count:item.count,
-        productTotal: item.price * item.count
+        smallPriceTotal: item.price * item.count
       }
 
     );
@@ -87,7 +87,6 @@ function calculateSmallPriceTotalPrice(calculatedBarcode)
 
     SmallPriceTotalPrice.totalPrice= totalPrice.toFixed(2);
   }
-
   return SmallPriceTotalPrice;
 }
 
@@ -117,7 +116,7 @@ ${ItemSheetObj.singleItem}
 
 }
 
-/*
+
  var inputs = [
   {
     barcode: 'ITEM000000',
@@ -170,20 +169,19 @@ ${ItemSheetObj.singleItem}
   }
 ];
 
-*/
+
 var ItemSheetArray = turnStringtoArray(inputs);
- // console.log(partialItemSheet);
+  //console.log(ItemSheetArray);
 var barcode = buildBarcode(ItemSheetArray);
-// console.log(barcode);
+//  console.log(barcode);
 var calculatedBarcode = calculateBarcode(barcode, ItemSheetArray);
-//  console.log(calculatedBarcode);
+// console.log(calculatedBarcode);
 var SmallPriceTotalPrice = calculateSmallPriceTotalPrice(calculatedBarcode);
-// console.log(SmallPriceTotalPrice);
+ // console.log(SmallPriceTotalPrice);
 var ItemSheetObj = turnArraytoObject(SmallPriceTotalPrice);
- // console.log(ItemSheet);
+  // console.log(ItemSheetObj);
 var result = printReceipt(ItemSheetObj);
 
- console.log(result);
-
+  console.log(result);
 
 
